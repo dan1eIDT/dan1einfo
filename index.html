@@ -149,24 +149,7 @@
             margin-top: 20px;
         }
 
-        /* Mobile scroll hint */
-        .scroll-hint {
-            display: none;
-            text-align: center;
-            padding: 10px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-
         @media (max-width: 600px) {
-            .scroll-hint {
-                display: block;
-            }
-            
             .dos-btn {
                 width: 100%;
                 min-width: auto;
@@ -189,8 +172,6 @@
         </header>
 
         <div id="boot-sequence"></div>
-
-        <div class="scroll-hint">▼ ПРОКРУТИТЕ ВНИЗ ▼</div>
 
         <div id="main-menu">
             <div class="menu-title">AVAILABLE PROGRAMS:</div>
@@ -264,30 +245,22 @@
         const mainMenu = document.getElementById('main-menu');
         
         let lineIndex = 0;
-        let charIndex = 0;
 
-        function typeLine() {
+        // Появление текста построчно (быстро)
+        function showLine() {
             if (lineIndex < bootText.length) {
-                let currentLineDiv = bootContainer.querySelector(`#line-${lineIndex}`);
-                if (!currentLineDiv) {
-                    currentLineDiv = document.createElement('div');
-                    currentLineDiv.id = `line-${lineIndex}`;
-                    bootContainer.appendChild(currentLineDiv);
-                }
-
-                const fullText = bootText[lineIndex];
+                const newLine = document.createElement('div');
+                newLine.id = `line-${lineIndex}`;
+                newLine.textContent = bootText[lineIndex];
+                bootContainer.appendChild(newLine);
                 
-                if (charIndex < fullText.length) {
-                    currentLineDiv.textContent += fullText.charAt(charIndex);
-                    charIndex++;
-                    setTimeout(typeLine, Math.random() * 30 + 10);
-                } else {
-                    lineIndex++;
-                    charIndex = 0;
-                    setTimeout(typeLine, 150);
-                }
+                lineIndex++;
+                
+                // Быстрая задержка между строками (50-150мс)
+                setTimeout(showLine, Math.random() * 100 + 50);
             } else {
-                setTimeout(showMenu, 500);
+                // Всё напечатано, показываем меню
+                setTimeout(showMenu, 300);
             }
         }
 
@@ -300,7 +273,7 @@
         }
 
         window.onload = () => {
-            setTimeout(typeLine, 300);
+            setTimeout(showLine, 200);
         };
 
         // Keyboard shortcuts
