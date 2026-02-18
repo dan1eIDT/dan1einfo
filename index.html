@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dan1e info.web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --terminal-color: #ffffff;
+            --bg-color: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--terminal-color);
+            font-family: 'VT323', monospace;
+            height: 100vh;
+            overflow: hidden;
+            font-size: 1.3rem;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* CRT Screen Effect Overlay */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.15) 50%
+            );
+            background-size: 100% 2px;
+            pointer-events: none;
+            z-index: 10;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.95; }
+            50% { opacity: 1; }
+            100% { opacity: 0.95; }
+        }
+
+        /* Main Container */
+        .terminal-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        /* Header Section */
+        .header {
+            margin-bottom: 20px;
+            text-align: left;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        /* Boot Text Area */
+        #boot-sequence {
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+
+        /* Menu Area */
+        #main-menu {
+            display: none;
+            border-top: 1px solid var(--terminal-color);
+            padding-top: 15px;
+            text-align: left;
+        }
+
+        .menu-title {
+            text-align: left;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .button-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .dos-btn {
+            background: transparent;
+            border: 1px solid var(--terminal-color);
+            color: var(--terminal-color);
+            padding: 10px 15px;
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.1s;
+            text-decoration: none;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .dos-btn:hover {
+            background: var(--terminal-color);
+            color: #000;
+        }
+
+        /* Blinking Cursor */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background-color: var(--terminal-color);
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .admin-line {
+            margin-top: 30px;
+            border-top: 1px solid var(--terminal-color);
+            padding-top: 10px;
+        }
+
+        .prompt {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="crt-overlay"></div>
+
+    <div class="terminal-container">
+        <header class="header">
+             Console.dan1e.gkt [V2]<br>
+            (c) WU-Corporation. All rights reserved.
+        </header>
+
+        <div id="boot-sequence"></div>
+
+        <div id="main-menu">
+            <div class="menu-title">AVAILABLE PROGRAMS:</div>
+            <div class="button-list">
+                <!-- 
+                    ИНСТРУКЦИЯ ПО ИЗМЕНЕНИЮ ССЫЛОК:
+                    Замените href="#" на нужный URL
+                -->
+                
+                <!-- Кнопка 1: YouTube -->
+                <a href="https://www.youtube.com/@dan1eIDT" target="_blank" class="dos-btn">
+                    [1] YOUTUBE.EXE
+                </a>
+
+                <!-- Кнопка 2: Twitch -->
+                <a href="https://twitch.tv/prost0danik_" target="_blank" class="dos-btn">
+                    [2] TWITCH.EXE
+                </a>
+
+                <!-- Кнопка 3: Telegram -->
+                <a href="https://t.me/dan1e_tg" target="_blank" class="dos-btn">
+                    [3] TELEGRAM.EXE
+                </a>
+
+                <!-- Кнопка 4: Discord -->
+                <a href="https://discord.gg/YDMTAkQ" target="_blank" class="dos-btn">
+                    [4] DISCORD.EXE
+                </a>
+            </div>
+
+            <div class="admin-line">
+                SYSTEM ADMINISTRATOR: dan1e<br>
+                CONTACT: dan1e@WUCorp.local
+            </div>
+        </div>
+        
+        <div class="prompt">
+            C:\USR><span class="cursor"></span>
+        </div>
+    </div>
+
+    <script>
+        const bootText = [
+            "Microsoft(R) MS-DOS(R) Version 6.22",
+            "(C)Copyright Microsoft Corp 1981-2003.",
+            "",
+            "C:\\>DIR",
+            " Volume in drive C is SYSTEM",
+            " Directory of C:\\usr",
+            "",
+            "CONTROL    EXE     45,056  01-15-24  8:00a",
+            "CONFIG     SYS        256  01-15-24  8:00a",
+            "AUTOEXEC   BAT        128  01-15-24  8:00a",
+            "README     TXT      1,024  01-15-24  8:00a",
+            "        4 file(s)     46,464 bytes",
+            "        0 dir(s)   524,288 bytes free",
+            "",
+            "C:\\System39>CONTROL.EXE",
+            "Loading...",
+            "Initializing modules...",
+            "Loading video drivers... OK",
+            "Loading audio drivers... OK",
+            "Connecting to network... OK",
+	    "Включение русского языка... OK",
+            "",
+            "",
+            "Ожидание действия. Выберите нужную кнопку."
+        ];
+
+        const bootContainer = document.getElementById('boot-sequence');
+        const mainMenu = document.getElementById('main-menu');
+        
+        let lineIndex = 0;
+        let charIndex = 0;
+
+        function typeLine() {
+            if (lineIndex < bootText.length) {
+                let currentLineDiv = bootContainer.querySelector(`#line-${lineIndex}`);
+                if (!currentLineDiv) {
+                    currentLineDiv = document.createElement('div');
+                    currentLineDiv.id = `line-${lineIndex}`;
+                    bootContainer.appendChild(currentLineDiv);
+                }
+
+                const fullText = bootText[lineIndex];
+                
+                if (charIndex < fullText.length) {
+                    currentLineDiv.textContent += fullText.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeLine, Math.random() * 30 + 10);
+                } else {
+                    lineIndex++;
+                    charIndex = 0;
+                    setTimeout(typeLine, 150);
+                }
+            } else {
+                setTimeout(showMenu, 500);
+            }
+        }
+
+        function showMenu() {
+            mainMenu.style.display = 'block';
+        }
+
+        window.onload = () => {
+            setTimeout(typeLine, 300);
+        };
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            const buttons = document.querySelectorAll('.dos-btn');
+            if (e.key === '1') buttons[0]?.click();
+            if (e.key === '2') buttons[1]?.click();
+            if (e.key === '3') buttons[2]?.click();
+            if (e.key === '4') buttons[3]?.click();
+        });
+    </script>
+</body>
+</html>
+
