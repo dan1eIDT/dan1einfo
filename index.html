@@ -6,7 +6,7 @@
     <title>dan1e info.web</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --terminal-color: #ffffff;
@@ -22,12 +22,12 @@
         body {
             background-color: var(--bg-color);
             color: var(--terminal-color);
-            font-family: 'VT323', monospace;
-            height: 100vh;
-            overflow: hidden;
-            font-size: 1.3rem;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            font-size: 1.1rem;
             position: relative;
             padding: 20px;
+            overflow-y: auto;
         }
 
         /* CRT Screen Effect Overlay */
@@ -59,6 +59,7 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 10px;
+            padding-bottom: 100px;
         }
 
         /* Header Section */
@@ -66,7 +67,7 @@
             margin-bottom: 20px;
             text-align: left;
             text-transform: uppercase;
-            font-size: 1.1rem;
+            font-size: 1rem;
             line-height: 1.4;
         }
 
@@ -88,7 +89,7 @@
         .menu-title {
             text-align: left;
             margin-bottom: 15px;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
 
         .button-list {
@@ -102,20 +103,25 @@
             background: transparent;
             border: 1px solid var(--terminal-color);
             color: var(--terminal-color);
-            padding: 10px 15px;
-            font-family: 'VT323', monospace;
-            font-size: 1.3rem;
+            padding: 12px 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.1rem;
             cursor: pointer;
             text-align: left;
             transition: all 0.1s;
             text-decoration: none;
             display: inline-block;
             width: fit-content;
+            min-width: 200px;
         }
 
         .dos-btn:hover {
             background: var(--terminal-color);
             color: #000;
+        }
+
+        .dos-btn:active {
+            transform: scale(0.98);
         }
 
         /* Blinking Cursor */
@@ -142,6 +148,34 @@
         .prompt {
             margin-top: 20px;
         }
+
+        /* Mobile scroll hint */
+        .scroll-hint {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            .scroll-hint {
+                display: block;
+            }
+            
+            .dos-btn {
+                width: 100%;
+                min-width: auto;
+            }
+            
+            body {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -155,6 +189,8 @@
         </header>
 
         <div id="boot-sequence"></div>
+
+        <div class="scroll-hint">▼ ПРОКРУТИТЕ ВНИЗ ▼</div>
 
         <div id="main-menu">
             <div class="menu-title">AVAILABLE PROGRAMS:</div>
@@ -218,7 +254,7 @@
             "Loading video drivers... OK",
             "Loading audio drivers... OK",
             "Connecting to network... OK",
-	    "Включение русского языка... OK",
+            "Включение русского языка... OK",
             "",
             "",
             "Ожидание действия. Выберите нужную кнопку."
@@ -257,6 +293,10 @@
 
         function showMenu() {
             mainMenu.style.display = 'block';
+            // Прокрутка к меню после появления кнопок
+            setTimeout(() => {
+                mainMenu.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
         }
 
         window.onload = () => {
@@ -274,4 +314,3 @@
     </script>
 </body>
 </html>
-
