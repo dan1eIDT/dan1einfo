@@ -29,8 +29,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --terminal-color: #ffffff;
-            --bg-color: #000000;
+            --terminal-color: #33ff00;
+            --bg-color: #0a0a0a;
+            --glow-color: rgba(51, 255, 0, 0.5);
         }
 
         * {
@@ -48,6 +49,7 @@
             position: relative;
             padding: 20px;
             overflow-y: auto;
+            text-shadow: 0 0 5px var(--glow-color);
         }
 
         /* CRT Screen Effect Overlay */
@@ -59,18 +61,68 @@
             height: 100%;
             background: linear-gradient(
                 rgba(18, 16, 16, 0) 50%, 
-                rgba(0, 0, 0, 0.15) 50%
+                rgba(0, 0, 0, 0.25) 50%
             );
-            background-size: 100% 2px;
+            background-size: 100% 3px;
             pointer-events: none;
             z-index: 10;
-            animation: flicker 0.15s infinite;
+            animation: flicker 0.03s infinite;
+        }
+
+        /* Scanline animation */
+        .crt-overlay::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0),
+                rgba(255, 255, 255, 0) 50%,
+                rgba(0, 0, 0, 0.2) 50%,
+                rgba(0, 0, 0, 0.2)
+            );
+            background-size: 100% 4px;
+            z-index: 2;
+            pointer-events: none;
+            animation: scanlines 0.5s linear infinite;
         }
 
         @keyframes flicker {
-            0% { opacity: 0.95; }
+            0% { opacity: 0.97; }
             50% { opacity: 1; }
-            100% { opacity: 0.95; }
+            100% { opacity: 0.97; }
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        /* Screen curvature effect */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+            pointer-events: none;
+            z-index: 11;
+        }
+
+        /* Text glow animation */
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color); }
+            50% { text-shadow: 0 0 8px var(--glow-color), 0 0 15px var(--glow-color), 0 0 20px var(--glow-color); }
+        }
+
+        .terminal-container {
+            animation: textGlow 3s ease-in-out infinite;
         }
 
         /* Main Container */
@@ -138,6 +190,7 @@
         .dos-btn:hover {
             background: var(--terminal-color);
             color: #000;
+            box-shadow: 0 0 15px var(--glow-color);
         }
 
         .dos-btn:active {
@@ -147,11 +200,12 @@
         /* Blinking Cursor */
         .cursor {
             display: inline-block;
-            width: 8px;
+            width: 10px;
             height: 1.2em;
             background-color: var(--terminal-color);
             animation: blink 1s step-end infinite;
             vertical-align: text-bottom;
+            box-shadow: 0 0 10px var(--glow-color);
         }
 
         @keyframes blink {
@@ -192,6 +246,11 @@
         </header>
 
         <div id="boot-sequence"></div>
+
+        <!-- Hidden Easter Egg Message -->
+        <div id="easter-egg-message" style="display: none; text-align: center; margin: 30px 0; font-size: 2rem;">
+            ❤️ IDT FOREVER ❤️
+        </div>
 
         <div id="main-menu">
             <div class="menu-title">AVAILABLE PROGRAMS:</div>
@@ -250,6 +309,9 @@
         <div class="prompt">
             C:\USR><span class="cursor"></span>
         </div>
+
+        <!-- Hidden input for easter egg -->
+        <input type="text" id="secret-input" style="position: absolute; opacity: 0; pointer-events: none;" autocomplete="off">
     </div>
 
     <script>
@@ -322,6 +384,46 @@
             if (e.key === '2') buttons[1]?.click();
             if (e.key === '3') buttons[2]?.click();
             if (e.key === '4') buttons[3]?.click();
+        });
+
+        // Easter Egg: IDT -> Heart
+        const secretInput = document.getElementById('secret-input');
+        const easterEggMessage = document.getElementById('easter-egg-message');
+        let secretCode = '';
+        const secretPhrase = 'IDT';
+
+        // Focus hidden input on any keypress to capture typing
+        document.addEventListener('keydown', (e) => {
+            if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+                secretInput.focus();
+            }
+        });
+
+        // Listen for input in the hidden field
+        secretInput.addEventListener('input', (e) => {
+            secretCode += e.data || '';
+            secretCode = secretCode.toUpperCase().slice(-10); // Keep last 10 chars
+            
+            if (secretCode.includes(secretPhrase)) {
+                easterEggMessage.style.display = 'block';
+                easterEggMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Hide after 5 seconds
+                setTimeout(() => {
+                    easterEggMessage.style.display = 'none';
+                }, 5000);
+                
+                secretCode = '';
+                secretInput.value = '';
+            }
+        });
+
+        // Clear code on Enter or Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === 'Escape') {
+                secretCode = '';
+                secretInput.value = '';
+            }
         });
     </script>
 </body>
